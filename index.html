@@ -25,63 +25,46 @@
 .main-img {
     width: 100%;
     height: 100%;
-    object-fit: fill; /* บังคับรูปยืดเต็มหน้าจอ */
+    /* ปรับเป็น cover เพื่อให้รูปสมส่วน ไม่เบี้ยว แต่อาจจะมีการตัดขอบข้างเล็กน้อยเพื่อให้เต็มจอ */
+    object-fit: cover; 
     display: block;
 }
 
-/* --- การตั้งค่าปุ่มกดล่องหน --- */
+/* --- ปรับพื้นที่ปุ่มให้ใหญ่ขึ้นและตรงตำแหน่ง --- */
 .btn { 
     position: absolute; 
     cursor: pointer; 
     text-decoration: none; 
-    -webkit-tap-highlight-color: transparent; 
+    -webkit-tap-highlight-color: transparent;
+    /* เปิดสีชั่วคราวเพื่อเช็คตำแหน่งตอนทำ (ถ้าตรงแล้วเปลี่ยนเป็น transparent) */
+    background-color: rgba(255, 255, 255, 0); 
 }
 
-/* 1. ปุ่มติ๊กต็อก (เหรียญบนซ้าย) */
-.btn-tiktok { top: 12%; left: 16%; width: 22%; height: 10%; border-radius: 50%; }
+/* ปรับขนาด width/height ให้ใหญ่ขึ้นครอบคลุมเหรียญ */
+.btn-tiktok { top: 12%; left: 12%; width: 28%; height: 12%; border-radius: 50%; }
+.btn-dhamma-live { top: 12%; right: 12%; width: 28%; height: 12%; border-radius: 50%; }
+.btn-youtube { top: 26%; left: 12%; width: 28%; height: 12%; border-radius: 50%; }
+.btn-prayers { top: 26%; right: 12%; width: 28%; height: 12%; border-radius: 50%; }
 
-/* 2. ปุ่มสนทนาธรรม/เพจเฟซบุ๊ก (เหรียญบนขวา) */
-.btn-dhamma-live { top: 12%; right: 16%; width: 22%; height: 10%; border-radius: 50%; }
-
-/* 3. ปุ่มยูทูบ/เพลงธรรมะ (เหรียญล่างซ้าย) */
-.btn-youtube { top: 25.5%; left: 16%; width: 22%; height: 10%; border-radius: 50%; }
-
-/* 4. ปุ่มรวมบทสวดมนต์ (เหรียญล่างขวา) */
-.btn-prayers { top: 25.5%; right: 16%; width: 22%; height: 10%; border-radius: 50%; }
-
-/* 5. ปุ่มติดตาม (ปุ่มสีเขียวตรงกลาง) */
-.btn-follow { top: 48.5%; left: 50%; width: 24%; height: 4.5%; border-radius: 50px; transform: translateX(-50%); }
-
-/* 6. ปุ่มแชร์บุญ (เหรียญทองด้านล่างสุด) */
-.btn-share { bottom: 15%; left: 42%; width: 16%; height: 9%; border-radius: 50%; }
-
-
-
-        /* ส่วนหน้าต่างที่เด้งขึ้นมา (Overlay) */
-        .overlay-menu { 
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0, 0, 0, 0.95); z-index: 999; flex-direction: column; 
-            align-items: center; justify-content: center; overflow-y: auto; padding: 20px; box-sizing: border-box; 
-        }
-        .menu-title { font-size: 24px; color: #ffd700; margin-bottom: 20px; text-align: center; }
-        .menu-item { 
-            display: flex; align-items: center; justify-content: center; 
-            background: #fff; margin-bottom: 10px; padding: 15px; border-radius: 50px; 
-            text-decoration: none; color: #333; width: 280px; font-weight: 600; 
-        }
-        
-        /* สไตล์บทสวดภายในเมนู */
-        details { width: 100%; max-width: 350px; margin-bottom: 10px; background: #222; border-radius: 10px; color: #fff; }
-        summary { padding: 15px; color: #ffd700; cursor: pointer; }
-        .prayer-text { padding: 15px; line-height: 1.8; font-size: 16px; background: #000; white-space: pre-wrap; border-top: 1px solid #333; }
-        .close-btn { margin-top: 20px; padding: 12px 40px; background: #cc0000; color: white; border-radius: 50px; cursor: pointer; }
-
-/* --- cssของปุ่ม ติดตาม --- */
-.close-btn { 
-    margin-top: 20px; padding: 12px 40px; 
-    background: #cc0000; color: white; 
-    border-radius: 50px; cursor: pointer; 
+/* ปุ่มติดตาม (ทำให้กว้างขึ้นกดง่าย) */
+.btn-follow { 
+    top: 48.5%; 
+    left: 50%; 
+    width: 35%; 
+    height: 6%; 
+    border-radius: 50px; 
+    transform: translateX(-50%); 
 }
+
+/* ปุ่มแชร์ (ขยายให้ใหญ่ขึ้น) */
+.btn-share { 
+    bottom: 12%; 
+    left: 40%; 
+    width: 20%; 
+    height: 10%; 
+    border-radius: 50%; 
+}
+
 
     </style>
 </head>
@@ -292,12 +275,21 @@
     function openMenu(id) { document.getElementById(id).style.display = 'flex'; }
     function closeMenu(id) { document.getElementById(id).style.display = 'none'; }
     function shareWeb() {
-        if (navigator.share) {
-            navigator.share({ title: 'PHRA TEE - ศีลธรรมเดินดิน', url: window.location.href });
-        } else {
-            alert("คัดลอกลิงก์สำเร็จ!");
-        }
+    if (navigator.share) {
+        navigator.share({
+            title: 'PHRA TEE - ศีลธรรมเดินดิน',
+            text: 'รวมใจปฏิบัติ ศีลธรรมเดินดิน เติมบุญชีวิต ทรัพย์สินทวีคูณ',
+            url: window.location.href
+        }).then(() => {
+            console.log('แชร์สำเร็จ');
+        }).catch((error) => {
+            console.log('ยกเลิก', error);
+        });
+    } else {
+        alert("ระบบแชร์ไม่รองรับบนอุปกรณ์นี้ คุณสามารถคัดลอกลิงก์ส่งต่อได้เลยครับ");
     }
+}
+
 </script>
 
 </body>
