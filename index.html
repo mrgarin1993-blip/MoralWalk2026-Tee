@@ -196,57 +196,107 @@
             z-index: 10;
         }
 
-        /* ตำแหน่งปุ่มกดให้ตรงเหรียญทอง */
-        .btn-tiktok { top: 12%; left: 12%; width: 28%; height: 12%; }
-        .btn-dhamma-live { top: 12%; right: 12%; width: 28%; height: 12%; }
-        .btn-youtube { top: 26%; left: 12%; width: 28%; height: 12%; }
-        .btn-prayers { top: 26%; right: 12%; width: 28%; height: 12%; }
-        .btn-follow { top: 48.5%; left: 50%; width: 35%; height: 6%; transform: translateX(-50%); }
-        .btn-share { bottom: 12%; left: 40%; width: 20%; height: 10%; }
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PHRA TEE - ศีลธรรมเดินดิน</title>
+    <style>
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #000; font-family: 'Tahoma', sans-serif; overflow: hidden; }
+        .container { position: relative; width: 100%; max-width: 500px; margin: 0 auto; }
+        .main-img { width: 100%; height: auto; display: block; }
 
-        /* ส่วนซ่อนเมนูบทสวดมนต์ */
-        .overlay-menu {
+        /* ปุ่มล่องหนตามตำแหน่งเหรียญ */
+        .btn { position: absolute; cursor: pointer; color: transparent; background: rgba(255, 255, 255, 0); z-index: 10; -webkit-tap-highlight-color: transparent; }
+        
+        /* เหรียญซ้ายบน - TikTok */
+        .btn-tiktok { top: 11%; left: 11%; width: 33%; height: 12%; }
+        /* เหรียญขวาบน - รวมลิงก์โซเชียล (Messenger, เพจ) */
+        .btn-social-hub { top: 11%; right: 11%; width: 33%; height: 12%; }
+        /* เหรียญซ้ายล่าง - YouTube */
+        .btn-youtube { top: 25%; left: 11%; width: 33%; height: 12%; }
+        /* เหรียญขวาล่าง - บทสวดมนต์ (มีเนื้อหาข้างใน) */
+        .btn-prayers { top: 25%; right: 11%; width: 33%; height: 12%; }
+        /* ปุ่มยาวกลาง - ติดตาม */
+        .btn-follow { top: 48%; left: 50%; width: 45%; height: 8%; transform: translateX(-50%); }
+        /* ปุ่มล่างสุด - แชร์บุญ */
+        .btn-share { bottom: 10%; left: 35%; width: 30%; height: 10%; }
+
+        /* หน้าต่าง Pop-up (Overlay) */
+        .overlay {
             display: none;
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9);
+            background: rgba(0,0,0,0.95);
             color: white;
             z-index: 100;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
-            text-align: center;
+            padding-top: 50px;
+            overflow-y: auto;
         }
-        .menu-item { padding: 15px; font-size: 20px; color: #fff; text-decoration: none; display: block; border-bottom: 1px solid #333; width: 80%; }
-        .close-btn { margin-top: 20px; padding: 10px 30px; background: #cc0000; border-radius: 20px; cursor: pointer; }
+
+        .content-box { width: 85%; background: #1a1a1a; padding: 20px; border-radius: 15px; border: 1px solid #ffd700; margin-bottom: 20px; }
+        .menu-item { padding: 15px; font-size: 20px; color: #ffd700; text-decoration: none; display: block; border-bottom: 1px solid #333; width: 100%; text-align: center; }
+        .prayer-text { font-size: 18px; color: #fff; line-height: 1.6; text-align: center; white-space: pre-line; }
+        .close-btn { margin: 20px; padding: 12px 40px; background: #cc0000; color: white; border-radius: 30px; cursor: pointer; font-weight: bold; }
+        h2 { color: #ffd700; margin-bottom: 20px; }
     </style>
 </head>
 <body>
 
     <div class="container">
+        <!-- ใส่ลิงก์รูปภาพของคุณที่นี่ -->
         <img src="https://ibb.co" class="main-img">
 
-        <!-- ปุ่มลิงก์ต่างๆ -->
         <a href="https://tiktok.com" target="_blank" class="btn btn-tiktok">TikTok</a>
-        <a href="https://m.me" target="_blank" class="btn btn-dhamma-live">Messenger</a>
+        <a href="javascript:void(0)" onclick="openModal('social-modal')" class="btn btn-social-hub">โซเชียล</a>
         <a href="https://youtube.com" target="_blank" class="btn btn-youtube">YouTube</a>
-        <a href="javascript:void(0)" onclick="openMenu('menu-categories')" class="btn btn-prayers">บทสวดมนต์</a>
+        <a href="javascript:void(0)" onclick="openModal('prayer-modal')" class="btn btn-prayers">บทสวดมนต์</a>
         <a href="https://facebook.com" target="_blank" class="btn btn-follow">ติดตาม</a>
         <a href="javascript:void(0)" onclick="shareWeb()" class="btn btn-share">แชร์บุญ</a>
     </div>
 
-    <!-- เมนูบทสวดมนต์ (ที่ซ่อนไว้) -->
-    <div id="menu-categories" class="overlay-menu">
-        <h2>เลือกบทสวดมนต์</h2>
-        <a href="#" class="menu-item">ลายมือมงคล</a>
-        <a href="#" class="menu-item">สายคุ้มครอง</a>
-        <a href="#" class="menu-item">สายกันภัย</a>
-        <div class="close-btn" onclick="closeMenu('menu-categories')">กลับหน้าหลัก</div>
+    <!-- 1. กล่องข้อความหน้าย่อย: รวมลิงก์ (เหรียญขวาบน) -->
+    <div id="social-modal" class="overlay">
+        <h2>ติดต่อสอบถาม / ติดตาม</h2>
+        <div class="content-box">
+            <a href="https://m.me" target="_blank" class="menu-item">💬 ทักแชท Messenger</a>
+            <a href="https://facebook.com" target="_blank" class="menu-item">🚩 เพจหลัก ศีลธรรมเดินดิน</a>
+            <a href="https://tiktok.com" target="_blank" class="menu-item">📱 TikTok</a>
+        </div>
+        <div class="close-btn" onclick="closeModal('social-modal')">ปิดหน้าต่าง</div>
+    </div>
+
+    <!-- 2. กล่องข้อความหน้าย่อย: เนื้อหาบทสวด (เหรียญขวาล่าง) -->
+    <div id="prayer-modal" class="overlay">
+        <h2>บทสวดมนต์มงคล</h2>
+        
+        <div class="content-box">
+            <h3 style="color:#ffd700">📜 บทสวดลายมือมงคล</h3>
+            <p class="prayer-text">
+                (ใส่เนื้อหาบทสวดของคุณที่นี่)
+                นะโม ตัสสะ ภะคะวะโต อะระหะโต สัมมาสัมพุทธัสสะ...
+                สวดเพื่อเสริมบารมี เพิ่มพูนทรัพย์สิน
+            </p>
+        </div>
+
+        <div class="content-box">
+            <h3 style="color:#ffd700">🛡️ บทสวดสายคุ้มครอง</h3>
+            <p class="prayer-text">
+                (ใส่เนื้อหาบทสวดของคุณที่นี่)
+                อิติปิโส วิเสเสอิ...
+                สวดเพื่อให้แคล้วคลาด ปลอดภัยจากอันตราย
+            </p>
+        </div>
+
+        <div class="close-btn" onclick="closeModal('prayer-modal')">กลับหน้าหลัก</div>
     </div>
 
     <script>
-        function openMenu(id) { document.getElementById(id).style.display = 'flex'; }
-        function closeMenu(id) { document.getElementById(id).style.display = 'none'; }
+        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
         function shareWeb() {
             if (navigator.share) {
@@ -254,9 +304,9 @@
                     title: 'PHRA TEE - ศีลธรรมเดินดิน',
                     text: 'รวมใจปฏิบัติ ศีลธรรมเดินดิน เติมบุญชีวิต ทรัพย์สินทวีคูณ',
                     url: window.location.href
-                }).catch(console.error);
+                });
             } else {
-                alert("คัดลอกลิงก์หน้าเว็บเพื่อแชร์ต่อได้เลยครับ");
+                alert("ก๊อปปี้ลิงก์หน้าเว็บเพื่อแชร์ต่อได้เลยครับ");
             }
         }
     </script>
