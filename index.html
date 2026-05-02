@@ -4,304 +4,193 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>PHRA TEE - ศีลธรรมเดินดิน</title>
-    <link href="https://googleapis.com" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        /* --- ส่วนตกแต่งหน้าตาเว็บ --- */
+        /* ล็อกหน้าจอให้พอดีกับมือถือแนวตั้ง */
         body, html { 
-body, html { 
-            margin: 0; padding: 0; width: 100%; min-height: 100vh; 
-            font-family: 'Kanit', sans-serif; background-color: #000; 
-            display: flex; justify-content: center; align-items: flex-start;
+            margin: 0; 
+            padding: 0; 
+            width: 100%; 
+            height: 100%; 
+            font-family: 'Kanit', sans-serif; 
+            background-color: #000; 
+            overflow: hidden; 
+        }
+        /* คอนเทนเนอร์หลัก ปรับให้สูงเต็มหน้าจอ 100% ของมือถือ */
+        .container { 
+            position: relative; 
+            width: 100vw; 
+            height: 100vh; 
+            max-width: 500px; /* คุมขนาดสำหรับเปิดในคอม */
+            margin: 0 auto; 
+            overflow: hidden;
+        }
+        /* ปรับรูปภาพให้เป็นแนวตั้งและยืดเต็มจอพอดี */
+        .main-img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; /* บังคับรูปให้ยืดเต็มพื้นที่แนวตั้ง */
+            display: block; 
         }
 
-
-.container {
-    position: relative;
-    width: 100vw;
-    height: 100vh;
-    overflow: hidden;
-    background-color: #000;
-}
-
-.main-img {
-    width: 100%;
-    height: 100%;
-    /* ปรับเป็น cover เพื่อให้รูปสมส่วน ไม่เบี้ยว แต่อาจจะมีการตัดขอบข้างเล็กน้อยเพื่อให้เต็มจอ */
-    object-fit: cover; 
-    display: block;
-}
-
-
-/* --- การตั้งค่าปุ่มกดล่องหน --- */
-.btn { 
-    position: absolute; 
-    cursor: pointer; 
-    text-decoration: none; 
-    -webkit-tap-highlight-color: transparent; 
-}
-
-/* 1. ปุ่มติ๊กต็อก (เหรียญบนซ้าย) */
-.btn-tiktok { top: 12%; left: 12%; width: 12%; height: 28%; border-radius: 50%; }
-
-/* 2. ปุ่มสนทนาธรรม/เพจเฟซบุ๊ก (เหรียญบนขวา) */
-.btn-dhamma-live { top: 12%; right: 12%; width: 28%; height: 12%; border-radius: 50%; }
-
-/* 3. ปุ่มยูทูบ/เพลงธรรมะ (เหรียญล่างซ้าย) */
-.btn-youtube { top: 25.5%; left: 16%; width: 22%; height: 10%; border-radius: 50%; }
-
-/* 4. ปุ่มรวมบทสวดมนต์ (เหรียญล่างขวา) */
-.btn-prayers { top: 30.5%; right: 12%; width: 28%; height: 10%; border-radius: 50%; }
-
-/* 5. ปุ่มติดตาม (ปุ่มสีเขียวตรงกลาง) */
-.btn-follow { top: 48.5%; left: 50%; width: 24%; height: 4.5%; border-radius: 50px; transform: translateX(-50%); }
-
-/* 6. ปุ่มแชร์บุญ (เหรียญทองด้านล่างสุด) */
-.btn-share { bottom: 15%; left: 42%; width: 16%; height: 9%; border-radius: 50%; }
-
-
-
-        /* ส่วนหน้าต่างที่เด้งขึ้นมา (Overlay) */
-        .overlay-menu { 
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0, 0, 0, 0.95); z-index: 999; flex-direction: column; 
-            align-items: center; justify-content: center; overflow-y: auto; padding: 20px; box-sizing: border-box; 
-        }
-        .menu-title { font-size: 24px; color: #ffd700; margin-bottom: 20px; text-align: center; }
-        .menu-item { 
-            display: flex; align-items: center; justify-content: center; 
-            background: #fff; margin-bottom: 10px; padding: 15px; border-radius: 50px; 
-            text-decoration: none; color: #333; width: 280px; font-weight: 600; 
-        }
+        .btn { position: absolute; cursor: pointer; text-decoration: none; -webkit-tap-highlight-color: transparent; }
         
-        /* สไตล์บทสวดภายในเมนู */
-        details { width: 100%; max-width: 350px; margin-bottom: 10px; background: #222; border-radius: 10px; color: #fff; }
-        summary { padding: 15px; color: #ffd700; cursor: pointer; }
-        .prayer-text { padding: 15px; line-height: 1.8; font-size: 16px; background: #000; white-space: pre-wrap; border-top: 1px solid #333; }
-        .close-btn { margin-top: 20px; padding: 12px 40px; background: #cc0000; color: white; border-radius: 50px; cursor: pointer; }
+        /* ปุ่มต่างๆ */
+        /* โบร์แดง - MoralWalk 2026 */
+        .btn-moral-walk { top: 43.5%; left: 31%; width: 38%; height: 3.5%; }
+        /* ปุ่มเขียว - ติดตาม */
+        .btn-follow { top: 48%; left: 41%; width: 18%; height: 7.5%; }
+        /* เหรียญซ้ายบน - ติ๊กต๊อก */
+        .btn-tiktok { top: 15%; left: 12%; width: 20%; height: 12%; border-radius: 50%; }
+        /* เหรียญขวาบน-สนทนาธรรม&ปรดทุกข์ */
+        .btn-dhamma-live { top: 8%; right: 5%; width: 20%; height: 12%; border-radius: 50%; }
+         /* เหรียญซ้ายล่าง - ยูทูป */
+        .btn-youtube { top: 25%; left: 12%; width: 20%; height: 12%; border-radius: 50%; }
+         /* เหรียญขวาล่าง - รวมบทสวด */
+        .btn-prayers { top: 30%; right: 5%; width: 20%; height: 12%; border-radius: 50%; }
+                 /* เหรียญแชร์ล่างสุด */
+        .btn-share { 
+            bottom: 6.8%; 
+            left: 30.5%; 
+            width: 40%; 
+            height: 25.5%; 
+            border-radius: 50%; 
+        }
 
-/* --- cssของปุ่ม ติดตาม --- */
-.close-btn { 
-    margin-top: 20px; padding: 12px 40px; 
-    background: #cc0000; color: white; 
-    border-radius: 50px; cursor: pointer; 
-}
-
+        /* เมนู Overlay */
+        .overlay-menu { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.95); z-index: 999; flex-direction: column; align-items: center; justify-content: center; color: #fff; }
+        .menu-title { font-size: 24px; font-weight: 600; margin-bottom: 30px; text-align: center; color: #ffd700; }
+        .menu-list { width: 85%; max-width: 350px; }
+        .menu-item { display: flex; align-items: center; justify-content: center; background: #fff; margin-bottom: 15px; padding: 15px; border-radius: 50px; text-decoration: none; color: #333; font-size: 18px; font-weight: 500; transition: 0.3s; cursor: pointer; border: none; width: 100%; text-align: center; }
+        
+        /* หน้าเนื้อหาบทสวด & รายชื่อบทสวด */
+        .prayer-content { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #1a1a1a; z-index: 1000; overflow-y: auto; padding: 20px; box-sizing: border-box; color: #fff; }
+        .prayer-text { font-size: 20px; line-height: 1.8; text-align: center; white-space: pre-line; margin-bottom: 40px; }
+        .close-btn { margin: 20px auto; padding: 10px 30px; background: #cc0000; color: white; border-radius: 50px; cursor: pointer; text-align: center; width: fit-content; }
+        .back-btn { margin-bottom: 20px; color: #ffd700; cursor: pointer; text-decoration: underline; display: inline-block; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <!--  ( ลิงค์รูปหน้าหลัก ) -->
-    <img src="https://i.ibb.co/5hLWCJP7/image-fd99fa47-1.png" alt="ภาพหน้าหลักศีลธรรมเดินดิน" class="main-img">
-    
-    <!-- นี่คือปุ่มล่องหนที่ทับปุ่มสีเขียว "ติดตาม" -->
-
-
-            <!-- 1. ปุ่มติ๊กต็อก -->
-    <a href="https://www.tiktok.com" target="_blank" class="btn btn-tiktok"></a>
-
-    <!-- 2. ปุ่มสนทนาธรรมสด/ปลดทุกข์ (ลิงก์ไปที่เพจเฟซบุ๊กของคุณ) -->
-    <a href="https://m.me/MoralWalk2026" target="_blank" class="btn btn-dhamma-live"></a>
-
-    <!-- 3. ปุ่มยูทูบ/เพลงธรรมะ -->
-    <a href="https://www.youtube.com" target="_blank" class="btn btn-youtube"></a>
-
-    <!-- 4. ปุ่มรวมบทสวดมนต์ (เปิดเมนูเลือกบทสวด) -->
-    <a href="javascript:void(0)" onclick="openMenu('menu-categories')" class="btn btn-prayers"></a>
+    <img src="https://i.ibb.co/zT9rCBmX/1777702831078.png" alt="หน้าหลัก" class="main-img">
+    <a href="https://www.facebook.com/share/1EQkr3tUsD/" target="_blank" class="btn btn-moral-walk"></a>
     <a href="https://www.facebook.com/share/1EQkr3tUsD/" target="_blank" class="btn btn-follow"></a>
-
-    <!-- 5. ปุ่มแชร์บุญ (กดเพื่อแชร์หน้าเว็บนี้) -->
-    <a href="javascript:void(0)" onclick="shareWeb()" class="btn btn-share"></a>
-
+    <a href="https://www.tiktok.com/@somo5757" target="_blank" class="btn btn-tiktok"></a>
+    <div class="btn btn-dhamma-live" onclick="openMenu('menu-live')"></div>
+    <a href="https://music.youtube.com/playlist?list=PLvfSm3r31XPAr6tFZfab7imzezJzKhEa1" target="_blank" class="btn btn-youtube"></a>
+    <div class="btn btn-prayers" onclick="openMenu('menu-prayers')"></div>
+    <div class="btn btn-share" onclick="shareWeb()"></div>
+</div>
+        /* ลิงค์MEเพจ,MEติ๊กตอก,เฟสส่วนตัว,เพจหลัก */
+<div id="menu-live" class="overlay-menu">
+    <div class="menu-title">เมนูศีลธรรมที่เดินดิน</div>
+    <div class="menu-list">
+        <a href="https://m.me/moralwalk2026" class="menu-item">💬 คุยผ่าน Messenger</a>
+        <a href="https://tiktok.me/group/ZS9SDxUCm/" class="menu-item">🎵 ดู TikTok ธรรมะ</a>
+        <a href="https://www.facebook.com/100082445234089" class="menu-item">👤 Facebook ส่วนตัว</a>
+        <a href="https://www.facebook.com/share/1EQkr3tUsD/" class="menu-item">🙏 เพจศีลธรรมที่เดินดิน</a>
+    </div>
+    <div class="close-btn" onclick="closeMenu('menu-live')">ปิดหน้าต่าง</div>
 </div>
 
-<!-- 1. เมนูติดต่อ -->
-<div id="menu-contact" class="overlay-menu">
-    <div class="menu-title">ช่องทางติดต่อ</div>
-    <a href="https://m.me" class="menu-item" target="_blank">💬 Messenger เพจ</a>
-    <a href="https://tiktok.me" class="menu-item" target="_blank">🎵 Messenger ติ๊กต๊อก</a>
-    <div class="close-btn" onclick="closeMenu('menu-contact')">กลับหน้าหลัก</div>
+<div id="menu-prayers" class="overlay-menu">
+    <div class="menu-title">เลือกสายบทสวดมนต์</div>
+    <div class="menu-list">
+        <div class="menu-item" onclick="showSubMenu('protection')">🛡️ สายป้องกัน</div>
+        <div class="menu-item" onclick="showSubMenu('guardian')">⚔️ สายคุ้มครอง</div>
+        <div class="menu-item" onclick="showSubMenu('amulet')">✨ สายกันภัย&เสริมขลัง</div>
+    </div>
+    <div class="close-btn" onclick="closeMenu('menu-prayers')">ปิดหน้าต่าง</div>
 </div>
 
-<!-- 2. เมนูเลือกสายบทสวด -->
-<div id="menu-categories" class="overlay-menu">
-    <div class="menu-title">เลือกสายบทสวด</div>
-    <div class="menu-item" onclick="openMenu('page-protection')">🛡️ สายป้องกัน</div>
-    <div class="menu-item" onclick="openMenu('page-guardian')">⚔️ สายคุ้มครอง</div>
-    <div class="menu-item" onclick="openMenu('page-amulet')">✨ สายกันภัย&เสริมขลัง</div>
-    <div class="close-btn" onclick="closeMenu('menu-categories')">กลับหน้าหลัก</div>
+<div id="sub-menu-display" class="prayer-content">
+    <div class="back-btn" onclick="hideSubMenu()">← กลับไปเลือกสาย</div>
+    <h2 id="sub-menu-title" style="text-align: center; color: #ffd700;"></h2>
+    <div id="sub-menu-list" class="menu-list" style="margin: 0 auto;">
+        </div>
 </div>
 
-<!-- 3. หน้าบทสวด: สายป้องกัน -->
-<div id="page-protection" class="overlay-menu">
-    <div class="menu-title">รวมบทสวดสายป้องกัน</div>
-    <details>
-        <summary>๑. ป้องกันตัว</summary>
-        <div class="prayer-text">นะโม ตัสสะ ภะคะวะโต อะระหะโต สัมมาสัมพุทธัสสะ (๓ จบ)
-
-นะอยู่ซ้าย, โมอยู่ขวา, พุทธอยู่หน้า, ธาอยู่หลัง, ยะอยู่กะหม่อม, อะระหังพุทโธ, นะโมพุทธายะ, นะมามิหัง</div>
-    </details>
-    <div class="close-btn" onclick="closeMenu('page-protection')">ย้อนกลับ</div>
-</div>
-
-<!-- 4. หน้าบทสวด: สายคุ้มครอง -->
-<div id="page-guardian" class="overlay-menu">
-    <div class="menu-title">รวมบทสวดสายคุ้มครอง</div>
-    <details>
-        <summary>๑. หัวใจพระโมคคัลลา</summary>
-        <div class="prayer-text">นะโม ตัสสะ ภะคะวะโต อะระหะโต สัมมาสัมพุทธัสสะ (๓ จบ)
-
-นะโม พุทธายะ นะโมคัลลานัญ จะมะหาเถโร 
-อิทธิมันโต อาภาเวนะ เชยยะสิทธิเม 
-(หัวใจพระโมคคัลลา)</div>
-/* 4. ปุ่มรวมบทสวดมนต์ (เหรียญล่างขวา) */
-.btn-prayers { 
-    top: 31%; 
-    right: 14%; 
-    width: 22%; 
-    height: 12%; 
-    border-radius: 50%; 
-}
-
-/* 5. ปุ่มติดตาม (ปุ่มสีเขียวตรงกลาง) */
-.btn-follow { 
-    top: 54.5%; 
-    left: 50%; 
-    width: 24%; 
-    height: 4.5%; 
-    border-radius: 50px; 
-    transform: translateX(-50%); 
-}
-
-/* 6. ปุ่มแชร์บุญ (เหรียญทองด้านล่างสุด) */
-.btn-share { 
-    bottom: 12%; 
-    left: 42%; 
-    width: 16%; 
-    height: 9%; 
-    border-radius: 50%; 
-}
-
-
-
-        /* ส่วนหน้าต่างที่เด้งขึ้นมา (Overlay) */
-        .overlay-menu { 
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0, 0, 0, 0.95); z-index: 999; flex-direction: column; 
-            align-items: center; justify-content: center; overflow-y: auto; padding: 20px; box-sizing: border-box; 
-        }
-        .menu-title { font-size: 24px; color: #ffd700; margin-bottom: 20px; text-align: center; }
-        .menu-item { 
-            display: flex; align-items: center; justify-content: center; 
-            background: #fff; margin-bottom: 10px; padding: 15px; border-radius: 50px; 
-            text-decoration: none; color: #333; width: 280px; font-weight: 600; 
-        }
-        
-        /* สไตล์บทสวดภายในเมนู */
-        details { width: 100%; max-width: 350px; margin-bottom: 10px; background: #222; border-radius: 10px; color: #fff; }
-        summary { padding: 15px; color: #ffd700; cursor: pointer; }
-        .prayer-text { padding: 15px; line-height: 1.8; font-size: 16px; background: #000; white-space: pre-wrap; border-top: 1px solid #333; }
-        .close-btn { margin-top: 20px; padding: 12px 40px; background: #cc0000; color: white; border-radius: 50px; cursor: pointer; }
-
-/* --- cssของปุ่ม ติดตาม --- */
-.close-btn { 
-    margin-top: 20px; padding: 12px 40px; 
-    background: #cc0000; color: white; 
-    border-radius: 50px; cursor: pointer; 
-}
-
-    </style>
-</head>
-<body>
-
-<div class="container">
-    <!--  ( ลิงค์รูปหน้าหลัก ) -->
-<div class="container">
-    <img src="https://i.ibb.co/5hLWCJP7/image-fd99fa47-1.png" alt="ภาพหน้าหลักศีลธรรมเดินดิน" class="main-img">
-    
-            <!-- 1. ปุ่มติ๊กต็อก -->
-    <a href="https://www.tiktok.com" target="_blank" class="btn btn-tiktok"></a>
-
-    <!-- 2. ปุ่มสนทนาธรรมสด/ปลดทุกข์ (ลิงก์ไปที่เพจเฟซบุ๊กของคุณ) -->
-    <a href="https://facebook.com" target="_blank" class="btn btn-dhamma-live"></a>
-
-    <!-- 3. ปุ่มยูทูบ/เพลงธรรมะ -->
-    <a href="https://www.youtube.com" target="_blank" class="btn btn-youtube"></a>
-
-    <!-- 4. ปุ่มรวมบทสวดมนต์ (เปิดเมนูเลือกบทสวด) -->
-    <a href="javascript:void(0)" onclick="openMenu('menu-categories')" class="btn btn-prayers"></a>
-
-    <!-- 5. ปุ่มแชร์บุญ (กดเพื่อแชร์หน้าเว็บนี้) -->
-    <a href="javascript:void(0)" onclick="shareWeb()" class="btn btn-share"></a>
-
-</div>
-
-<!-- 1. เมนูติดต่อ -->
-<div id="menu-contact" class="overlay-menu">
-    <div class="menu-title">ช่องทางติดต่อ</div>
-    <a href="https://m.me" class="menu-item" target="_blank">💬 Messenger เพจ</a>
-    <a href="https://tiktok.me" class="menu-item" target="_blank">🎵 Messenger ติ๊กต๊อก</a>
-    <div class="close-btn" onclick="closeMenu('menu-contact')">กลับหน้าหลัก</div>
-</div>
-
-<!-- 2. เมนูเลือกสายบทสวด -->
-<div id="menu-categories" class="overlay-menu">
-    <div class="menu-title">เลือกสายบทสวด</div>
-    <div class="menu-item" onclick="openMenu('page-protection')">🛡️ สายป้องกัน</div>
-    <div class="menu-item" onclick="openMenu('page-guardian')">⚔️ สายคุ้มครอง</div>
-    <div class="menu-item" onclick="openMenu('page-amulet')">✨ สายกันภัย&เสริมขลัง</div>
-    <div class="close-btn" onclick="closeMenu('menu-categories')">กลับหน้าหลัก</div>
-</div>
-
-<!-- 3. หน้าบทสวด: สายป้องกัน -->
-<div id="page-protection" class="overlay-menu">
-    <div class="menu-title">รวมบทสวดสายป้องกัน</div>
-    <details>
-        <summary>๑. ป้องกันตัว</summary>
-        <div class="prayer-text">นะโม ตัสสะ ภะคะวะโต อะระหะโต สัมมาสัมพุทธัสสะ (๓ จบ)
-
-นะอยู่ซ้าย, โมอยู่ขวา, พุทธอยู่หน้า, ธาอยู่หลัง, ยะอยู่กะหม่อม, อะระหังพุทโธ, นะโมพุทธายะ, นะมามิหัง</div>
-    </details>
-    <div class="close-btn" onclick="closeMenu('page-protection')">ย้อนกลับ</div>
-</div>
-
-<!-- 4. หน้าบทสวด: สายคุ้มครอง -->
-<div id="page-guardian" class="overlay-menu">
-    <div class="menu-title">รวมบทสวดสายคุ้มครอง</div>
-    <details>
-        <summary>๑. หัวใจพระโมคคัลลา</summary>
-        <div class="prayer-text">นะโม ตัสสะ ภะคะวะโต อะระหะโต สัมมาสัมพุทธัสสะ (๓ จบ)
-
-นะโม พุทธายะ นะโมคัลลานัญ จะมะหาเถโร 
-อิทธิมันโต อาภาเวนะ เชยยะสิทธิเม 
-(หัวใจพระโมคคัลลา)</div>
-    </details>
-    <div class="close-btn" onclick="closeMenu('page-guardian')">ย้อนกลับ</div>
-</div>
-
-<!-- 5. หน้าบทสวด: สายกันภัย&เสริมขลัง -->
-<div id="page-amulet" class="overlay-menu">
-    <div class="menu-title">สายกันภัย & เสริมขลัง</div>
-    <details>
-        <summary>๑. บทเสริมขลัง (เมตตามหานิยม)</summary>
-        <div class="prayer-text">นะโม ตัสสะ ภะคะวะโต อะระหะโต สัมมาสัมพุทธัสสะ (๓ จบ)
-
-สหัสสะรังสี  สะตะเตโช  สุริโย  ตะมะวิโนทะโน  ปาโต  อุทะยันเต  สุริเย  มุทธา เต  ผะละตุ  สัตตะธา (๙ จบ)</div>
-    </details>
-    <div class="close-btn" onclick="closeMenu('page-amulet')">ย้อนกลับ</div>
+<div id="prayer-display" class="prayer-content">
+    <div class="back-btn" onclick="hidePrayer()">← กลับไปรายชื่อบทสวด</div>
+    <h2 id="prayer-title" style="text-align: center; color: #ffd700;"></h2>
+    <div id="prayer-detail" class="prayer-text"></div>
+    <div class="close-btn" onclick="closeAll()">ปิดทั้งหมด</div>
 </div>
 
 <script>
     function openMenu(id) { document.getElementById(id).style.display = 'flex'; }
     function closeMenu(id) { document.getElementById(id).style.display = 'none'; }
+
+    // --- ส่วนข้อมูลบทสวด (หลวงพี่เพิ่ม/ลด ตรงนี้ได้เลย) ---
+    const prayerData = {
+        'protection': {
+            categoryName: 'สายป้องกัน',
+            items: [
+                { name: 'บทสวดมงคลจักรวาล 8 ทิศ', text: '(นะโม 3 จบ)\nสัมปะจิตฉามิ นาสังสิโม...\nอุดมไปด้วยพุทธคุณป้องกันภัย' },
+                { name: 'บทพระคาถาชินบัญชร', text: 'ปุตตะกาโม ละเภปุตตัง...\nใช้สำหรับป้องกันสิ่งอัปมงคล' }
+            ]
+        },
+        'guardian': {
+            categoryName: 'สายคุ้มครอง',
+            items: [
+                { name: 'บทสวดอิติปิโส', text: 'อิติปิโส ภะคะวา อะระหัง สัมมาสัมพุทโธ...' },
+                { name: 'บทสวดพุทธชัยมงคลคาถา (พาหุง)', text: 'พาหุง สะหัสสะมะภินิมมิตะสาวุธันตัง...' }
+            ]
+        },
+        'amulet': {
+            categoryName: 'สายกันภัย & เสริมขลัง',
+            items: [
+                { name: 'บทคาถาเงินล้าน', text: 'นาสังสิโม พรหมา จะ มหาเทวา...' },
+                { name: 'บทแผ่เมตตาให้ตนเอง', text: 'อะหัง สุขิโต โหมิ...' }
+            ]
+        }
+    };
+
+    // ฟังก์ชันเปิดรายชื่อบทสวดย่อย
+    function showSubMenu(category) {
+        const data = prayerData[category];
+        const listContainer = document.getElementById('sub-menu-list');
+        document.getElementById('sub-menu-title').innerText = data.categoryName;
+        
+        // ล้างค่าเก่าแล้วสร้างปุ่มรายชื่อบทสวดใหม่
+        listContainer.innerHTML = '';
+        data.items.forEach((item, index) => {
+            const btn = document.createElement('div');
+            btn.className = 'menu-item';
+            btn.innerText = item.name;
+            btn.onclick = () => showPrayerContent(category, index);
+            listContainer.appendChild(btn);
+        });
+        
+        document.getElementById('sub-menu-display').style.display = 'block';
+    }
+
+    // ฟังก์ชันแสดงเนื้อหาบทสวด
+    function showPrayerContent(category, index) {
+        const item = prayerData[category].items[index];
+        document.getElementById('prayer-title').innerText = item.name;
+        document.getElementById('prayer-detail').innerText = item.text;
+        document.getElementById('prayer-display').style.display = 'block';
+    }
+
+    function hideSubMenu() { document.getElementById('sub-menu-display').style.display = 'none'; }
+    function hidePrayer() { document.getElementById('prayer-display').style.display = 'none'; }
+    
+    function closeAll() {
+        hidePrayer();
+        hideSubMenu();
+        closeMenu('menu-prayers');
+    }
+
     function shareWeb() {
+        const shareData = { title: 'PHRA TEE - ศีลธรรมเดินดิน', url: window.location.href };
         if (navigator.share) {
-            navigator.share({ title: 'PHRA TEE - ศีลธรรมเดินดิน', url: window.location.href });
+            navigator.share(shareData).catch(err => console.log(err));
         } else {
-            alert("คัดลอกลิงก์สำเร็จ!");
+            alert("Copy URL: " + window.location.href);
         }
     }
 </script>
-
 </body>
 </html>
